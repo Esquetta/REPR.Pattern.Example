@@ -1,0 +1,6 @@
+@REPR.Pattern.Example_HostAddress = http://localhost:5143
+
+GET {{REPR.Pattern.Example_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
