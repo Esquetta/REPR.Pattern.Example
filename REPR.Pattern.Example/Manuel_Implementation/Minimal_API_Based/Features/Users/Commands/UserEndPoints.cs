@@ -3,7 +3,7 @@ using REPR.Pattern.Example.Manuel_Implementation.Minimal_API_Based.Features.User
 
 namespace REPR.Pattern.Example.Manuel_Implementation.Minimal_API_Based.Features.Users.Commands
 {
-    public static class UserEndPoint
+    public static class UserEndPoints
     {
         public static void  RegisterUserEndPoints(this WebApplication application)
         {
