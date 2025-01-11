@@ -1,0 +1,52 @@
+REPR deseni(telafuz ‘Reaper’) ile Web API’ler de, controller sınıfları yerine endpoint adı verilen özel sınıflar ön plana çıkmakta ve request/response süreçleri bu sınıflar üzerinden işlenerek, yapılacak işe göre daha öznel ve yalıtılmış hale getirilmektedir.
+
+
+
+--Neden REPR Pattern’ı Kullanmalıyız? Nedir Bu?
+
+Şimdi bu soruyu cevaplandırabilmenin en doğru yolu bildiğimiz bir pattern üzerinden mukayesede bulunmaktır, yani MVC pattern’ından. Malumunuz MVC pattern’ı, geleneksel olarak API endpoint’leri oluşturmak için kullandığımız bir davranışsal modele sahiptir. Bu modelin çeşitli faydaları olsa da ister istemez dezavantajları da mevcuttur. Ki bana sorarsanız en büyük dezavantajı olarak değerlendirebileceğimiz, nihai olarak projeyi şişirilmiş controller(swollen controller) sınıflarına boğmasıdır. Şişirilmiş controller’dan kastedilen, controller’ların çok fazla sorumluluk almaları ve haddinden fazla işlev/metot/aksiyon barındırmalarıdır. Tabi zamanla, controller’larda biriken ve birbirleriyle ilişkili olmayan pek çok metot, bu sınıfların karmaşık hale gelmelerine neden olacaktır ve bu karmaşa, uygulamanın RESTful ilkelerine aykırı durumları barındırmasına ve bu ilkelerden istemsiz uzaklaşmasına ortam sağlayacaktır. Bu durumların dışında ayrıca, controller’lar da haddinden fazla aksiyonun olması bakım zorluğuna ve hangi metodun ne işe yaradığını anlamanın zorlaşmasına neden olacaktır.
+
+İşte bu durumlara karşın çözüm arayışına girildiği taktirde akla aşağıdaki yöntemler gelmektedir;
+
+-Servis Katmanı Kullanımı
+Business logic, controller’lardan ayrılarak daha küçük ve sadece işe odaklanmış servis sınıflarında oluşturulmalıdır. Ama bu yöntem bir düzen getiriyor olsa da yukarıdaki satırlarda ifade edilen swollen controller durumu için pekte çözüm sağlamamaktadır. Düşünürsek eğer bu halde bile yüzlerce aksiyon barındıran bir controller sınıfının anlaşılabilir olması yine ciddi emek gerektirecektir.
+
+-Özelleştirilmiş Controller Tasarlamak
+İşte, işe odaklı servis sınıflarının tasarlanıp aynı controller’da farklı aksiyonlar için kullanmak yerine her bir aksiyona/amaca karşılık tek bir controller’ın hizmet etmesini sağlamak en doğru çözüm olacaktır diyebiliriz. Böylece kodun daha düzenli, okunabilir ve sürdürülebilir olması mümkün olacaktır. Ancak bu sefer de ciddi manada kod tekrarı durumunun söz konusu olacağını itiraf etmemiz gerekecektir.
+
+REPR deseni ise tıpkı buradaki mantıkta olduğu gibi uygulamadaki her bir endpoint’i ayrı bir sınıf olarak tanımlamamızı ve her sınıfın gelen istekleri işlemek için tek bir metodu olması gerektiğini önermektedir.
+
+Böylece REPR deseni ile bir controller’daki birden fazla aksiyonu barındırma ihtiyacı ortadan kaldırılarak swollen controller durumu çözülebilmekte ve bir yandan da tek sorumluluk ilkesine de(bknz: Single Responsibility Principle – SRP) bağlı kalınarak aksiyon başına controller desteklenmektedir. Evet, bu tarz bir tasarım neticesinde proje bünyesinde dosya karmaşıklığının artmasıyla birlikte önceki satırlarda ifade ettiğimiz gibi istemsizce kod tekrarları da mevzu bahis olmaktadır.
+
+
+
+--REPR Pattern’ının Bileşenleri Nelerdir?
+
+REPR pattern’ı, üç temel aşamadan oluşmaktadır;
+
+-Request
+
+REPR deseni, bir REST deseni değildir!
+
+Haliyle kaynakları tanımlamak için değil, bir kaç satır önce bahsettiğim gibi RESTful ya da RPC gibi API endpoint’lerini daha efektif tanımlayabilmek için kullanılan bir desendir.
+
+Kullanıcı veya client’lardna gelen istekleri ifade etmektedir.
+Genellikle bir API çağrısı ya da HTTP isteği şeklindedir.
+JSON, XML vs. gibi belirli bir formattadır.
+
+-Endpoint
+Gelen request’in yölendirildiği servisi ifade etmektedir.
+Request bu servis tarafından alını ve gerekli iş mantığı işlenerek, çalıştırılır.
+Ve çalışma neticesinde bir result(sonuç) elde edilir.
+
+-Response
+Request neticesinde endpoint’te oluşturulan result’ı tekrar kullanıcı ya da client’a döndüren yapıyı ifade etmektedir.
+Çoğunlukla HTTP durum kodları(200, 404, 500 vb.) ile birlikte dönen result içermektedir.
+
+REPR Pattern Nasıl Uygulanır?
+REPR pattern, manuel uygulanabileceği gibi FastEndpoints ya da ApiEndpoints gibi kütüphaneler aracılığıyla da uygulanabilmektedir. Şimdi gelin her üç yöntemle de ilgili pattern’ı pratiksel olarak uygulamayı ele alalım;
+
+
+
+
+
